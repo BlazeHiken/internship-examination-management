@@ -31,3 +31,8 @@ node_modules/
 
 # Optional: database dumps
 *.sql.dump
+
+plan.txt
+prd.txt
+LCAObjective.pdf
+tasks.txt
