@@ -1,0 +1,33 @@
+# Compiled Java files
+*.class
+
+# Build folder
+/build/
+/bin/
+/out/
+
+# Eclipse / STS files
+.settings/
+.metadata/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temp files
+*.tmp
+
+# Node (just in case later)
+node_modules/
+
+# VS Code / Antigravity (just in case later)
+.vscode/
+
+# Environment files
+.env
+
+# Optional: database dumps
+*.sql.dump

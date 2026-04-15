@@ -1,0 +1,245 @@
+1.  Overview
+
+The system is a web-based application designed to automate and manage the complete lifecycle of students in a training institute, including registration, internship applications, and online certification exams.
+
+It provides a unified platform for students and administrators to interact efficiently while ensuring data integrity, security, and real-time tracking.
+
+2.  Objectives
+To automate student registration and internship processes
+To provide a centralized system for internship management
+To conduct secure online examinations
+To track student performance and activity logs
+To generate real-time reports and analytics
+3.  Stakeholders
+Stakeholder	Description
+Admin	Manages system, internships, and evaluation
+Student	Registers, applies for internships, takes exams
+Institute	Uses system for automation and tracking
+4.  System Scope
+Included:
+Student registration and login
+Internship listing and application
+Admin dashboard for management
+Online MCQ-based exam system
+Reports and analytics
+Excluded:
+Real-time video proctoring
+Mobile application
+Advanced AI-based monitoring
+5.  System Architecture
+
+The system follows MVC architecture:
+
+Model: JDBC (DAO classes for database operations)
+View: JSP (User Interface)
+Controller: Servlets (request handling and business logic)
+6.  Functional Requirements
+6.1 Authentication Module
+Users can login using email and password
+Role-based access (Admin / Student)
+Session management using HttpSession
+6.2 Student Module
+Register and manage profile
+View available internships
+Apply for internships
+
+Constraints:
+
+Cannot apply twice
+Cannot apply after deadline
+6.3 Admin Module
+Manage companies and internships
+Define eligibility criteria
+View applications
+6.4 Internship Application Module
+Students apply for internships
+Admin can shortlist/reject/select students
+Application logs are maintained
+6.5 Online Examination Module
+Students take MCQ-based exam
+Timer-based submission
+Automatic evaluation of answers
+6.6 Reporting Module
+Internship-wise application count
+Student selection reports
+Exam results and rankings
+6.7 Audit & Security Module
+Logs user activity
+Tracks suspicious actions (e.g., tab switching)
+Maintains session tracking
+7.  Database Requirements
+
+The system uses a relational database with the following tables:
+
+users
+students
+companies
+internships
+applications
+exams
+questions
+answers
+audit_logs
+
+Relationships ensure data integrity and normalization.
+
+8.  Non-Functional Requirements
+Requirement	Description
+Performance	Handles multiple users simultaneously
+Security	Session tracking and role-based access
+Reliability	Ensures data consistency using transactions
+Usability	Simple and user-friendly interface
+9.  Process Flow
+Student Flow:
+Register → Login
+View internships
+Apply
+Take exam
+View result
+Admin Flow:
+Login
+Manage internships
+Process applications
+Evaluate exams
+Generate reports
+10.  Assumptions
+Users have stable internet access
+System is accessed via web browser
+Basic security measures are sufficient
+11.  Constraints
+Limited development time
+Basic UI implementation
+No advanced proctoring
+12.  Success Criteria
+All modules are functional
+MVC architecture is correctly implemented
+Database operations are consistent
+Reports are generated successfully
+System performs without major errors
+13.  Future Enhancements
+AI-based proctoring
+Mobile application support
+Cloud deployment
+Advanced analytics dashboard1.  Overview
+
+The system is a web-based application designed to automate and manage the complete lifecycle of students in a training institute, including registration, internship applications, and online certification exams.
+
+It provides a unified platform for students and administrators to interact efficiently while ensuring data integrity, security, and real-time tracking.
+
+2.  Objectives
+To automate student registration and internship processes
+To provide a centralized system for internship management
+To conduct secure online examinations
+To track student performance and activity logs
+To generate real-time reports and analytics
+3.  Stakeholders
+Stakeholder	Description
+Admin	Manages system, internships, and evaluation
+Student	Registers, applies for internships, takes exams
+Institute	Uses system for automation and tracking
+4.  System Scope
+Included:
+Student registration and login
+Internship listing and application
+Admin dashboard for management
+Online MCQ-based exam system
+Reports and analytics
+Excluded:
+Real-time video proctoring
+Mobile application
+Advanced AI-based monitoring
+5.  System Architecture
+
+The system follows MVC architecture:
+
+Model: JDBC (DAO classes for database operations)
+View: JSP (User Interface)
+Controller: Servlets (request handling and business logic)
+6.  Functional Requirements
+6.1 Authentication Module
+Users can login using email and password
+Role-based access (Admin / Student)
+Session management using HttpSession
+6.2 Student Module
+Register and manage profile
+View available internships
+Apply for internships
+
+Constraints:
+
+Cannot apply twice
+Cannot apply after deadline
+6.3 Admin Module
+Manage companies and internships
+Define eligibility criteria
+View applications
+6.4 Internship Application Module
+Students apply for internships
+Admin can shortlist/reject/select students
+Application logs are maintained
+6.5 Online Examination Module
+Students take MCQ-based exam
+Timer-based submission
+Automatic evaluation of answers
+6.6 Reporting Module
+Internship-wise application count
+Student selection reports
+Exam results and rankings
+6.7 Audit & Security Module
+Logs user activity
+Tracks suspicious actions (e.g., tab switching)
+Maintains session tracking
+7.  Database Requirements
+
+The system uses a relational database with the following tables:
+
+users
+students
+companies
+internships
+applications
+exams
+questions
+answers
+audit_logs
+
+Relationships ensure data integrity and normalization.
+
+8.  Non-Functional Requirements
+Requirement	Description
+Performance	Handles multiple users simultaneously
+Security	Session tracking and role-based access
+Reliability	Ensures data consistency using transactions
+Usability	Simple and user-friendly interface
+9.  Process Flow
+Student Flow:
+Register → Login
+View internships
+Apply
+Take exam
+View result
+Admin Flow:
+Login
+Manage internships
+Process applications
+Evaluate exams
+Generate reports
+10.  Assumptions
+Users have stable internet access
+System is accessed via web browser
+Basic security measures are sufficient
+11.  Constraints
+Limited development time
+Basic UI implementation
+No advanced proctoring
+12.  Success Criteria
+All modules are functional
+MVC architecture is correctly implemented
+Database operations are consistent
+Reports are generated successfully
+System performs without major errors
+13.  Future Enhancements
+AI-based proctoring
+Mobile application support
+Cloud deployment
+Advanced analytics dashboard
