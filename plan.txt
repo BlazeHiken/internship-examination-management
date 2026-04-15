@@ -1,9 +1,0 @@
-Table	Column	Constraint Removed
-students	cgpa	0–10 range
-companies	eligibility_cgpa	0–10 range
-internships	stipend	≥ 0
-exams	duration	> 0
-exams	total_marks	> 0
-questions	marks	> 0
-
-check Constraint removed from create table, we will handle it in java code.
