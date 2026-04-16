@@ -27,6 +27,20 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        // If user has an active session, invalidate it first
+        // (e.g., they navigated here via back button while still logged in)
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("user") != null) {
+            User user = (User) session.getAttribute("user");
+            try {
+                userDAO.setLoggedIn(user.getUserId(), false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            session.invalidate();
+        }
+
         request.getRequestDispatcher("/register.jsp").forward(request, response);
     }
 
