@@ -36,15 +36,15 @@ public class RoleFilter implements Filter {
         String uri = request.getRequestURI();
         String contextPath = request.getContextPath();
 
-        // Student trying to access admin pages
+        // Student trying to access admin pages — session was taken over
         if (uri.startsWith(contextPath + "/admin") && !"ADMIN".equals(role)) {
-            response.sendRedirect(contextPath + "/student/dashboard");
+            response.sendRedirect(contextPath + "/login?error=session_conflict");
             return;
         }
 
-        // Admin trying to access student pages
+        // Admin trying to access student pages — session was taken over
         if (uri.startsWith(contextPath + "/student") && !"STUDENT".equals(role)) {
-            response.sendRedirect(contextPath + "/admin/dashboard");
+            response.sendRedirect(contextPath + "/login?error=session_conflict");
             return;
         }
 

@@ -172,6 +172,7 @@
             <a href="<%= request.getContextPath() %>/admin/applications">Applications</a>
             <a href="<%= request.getContextPath() %>/admin/exams">Exams</a>
             <a href="<%= request.getContextPath() %>/admin/reports">Reports</a>
+            <a href="<%= request.getContextPath() %>/admin/audit">Audit</a>
             <a href="<%= request.getContextPath() %>/logout" class="btn-logout">Logout</a>
         </div>
     </nav>

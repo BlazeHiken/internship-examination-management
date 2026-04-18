@@ -155,6 +155,11 @@
             <div class="message success">Registration successful! Please log in.</div>
         <% } %>
 
+        <!-- Session conflict message -->
+        <% if ("session_conflict".equals(request.getParameter("error"))) { %>
+            <div class="message error">Your session was used by another login. Please log in again.</div>
+        <% } %>
+
         <form action="login" method="POST">
             <div class="form-group">
                 <label for="email">Email</label>

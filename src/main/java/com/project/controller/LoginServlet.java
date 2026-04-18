@@ -3,6 +3,8 @@ package com.project.controller;
 import com.project.dao.UserDAO;
 import com.project.model.User;
 
+import com.project.dao.AuditDAO;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -21,10 +23,18 @@ import java.sql.SQLException;
 public class LoginServlet extends HttpServlet {
 
     private UserDAO userDAO = new UserDAO();
+    private AuditDAO auditDAO = new AuditDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        // If redirected due to session conflict, show login page (don't auto-redirect)
+        String error = request.getParameter("error");
+        if ("session_conflict".equals(error)) {
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            return;
+        }
 
         // If user already has an active session, redirect to dashboard
         HttpSession session = request.getSession(false);
@@ -64,12 +74,29 @@ public class LoginServlet extends HttpServlet {
             // Mark user as logged in
             userDAO.setLoggedIn(user.getUserId(), true);
 
-            // Create new session
+            // Invalidate any existing session to prevent cross-tab conflicts
+            HttpSession existingSession = request.getSession(false);
+            if (existingSession != null) {
+                existingSession.invalidate();
+            }
+
+            // Create fresh session
             HttpSession session = request.getSession(true);
             session.setAttribute("user", user);
             session.setAttribute("userId", user.getUserId());
             session.setAttribute("role", user.getRole());
             session.setMaxInactiveInterval(30 * 60); // 30 minutes timeout
+
+            // Log login action and track session
+            try {
+                auditDAO.logAction(user.getUserId(), "LOGIN_SUCCESS",
+                    request.getRemoteAddr(), request.getHeader("User-Agent"));
+                auditDAO.trackSession(session.getId(), user.getUserId(),
+                    request.getRemoteAddr(), request.getHeader("User-Agent"));
+            } catch (SQLException ex) {
+                // Audit should never block login
+                ex.printStackTrace();
+            }
 
             // Redirect based on role
             redirectToDashboard(response, user.getRole());
