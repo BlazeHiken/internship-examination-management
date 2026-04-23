@@ -214,7 +214,7 @@
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', '<%= request.getContextPath() %>/student/tabswitch', true);
                 xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                xhr.send('attemptId=<%= attempt.getAttemptId() %>&count=' + tabSwitchCount);
+                xhr.send('attemptId=<%= attempt.getAttemptId() %>&examName=<%= java.net.URLEncoder.encode(exam.getExamName(), "UTF-8") %>&count=' + tabSwitchCount);
             }
         });
     </script>

@@ -151,4 +151,45 @@ public class AuditDAO {
             DBConnection.closeConnection(conn);
         }
     }
+
+    /**
+     * Report 5: Gets suspicious activity logs.
+     * Filters for: auto-submitted exams, tab switch events,
+     * failed login attempts, and unusual activity patterns.
+     */
+    public List<Map<String, Object>> getSuspiciousLogs() throws SQLException {
+        String sql = "SELECT al.log_id, al.action, al.ip_address, al.user_agent, al.log_time, " +
+                     "COALESCE(u.name, 'Unknown') AS user_name, u.email, u.role " +
+                     "FROM audit_logs al " +
+                     "LEFT JOIN users u ON al.user_id = u.user_id " +
+                     "WHERE al.action LIKE '%TAB_SWITCH%' " +
+                     "OR al.action LIKE '%AUTO_SUBMITTED%' " +
+                     "OR al.action IN ('LOGIN_ATTEMPT') " +
+                     "ORDER BY al.log_time DESC LIMIT 50";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Map<String, Object>> results = new ArrayList<>();
+
+        try {
+            conn = DBConnection.getConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            ResultSetMetaData meta = rs.getMetaData();
+            int cols = meta.getColumnCount();
+
+            while (rs.next()) {
+                Map<String, Object> row = new LinkedHashMap<>();
+                for (int i = 1; i <= cols; i++) {
+                    row.put(meta.getColumnLabel(i), rs.getObject(i));
+                }
+                results.add(row);
+            }
+            return results;
+        } finally {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
+            DBConnection.closeConnection(conn);
+        }
+    }
 }
