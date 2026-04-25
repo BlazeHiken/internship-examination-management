@@ -107,6 +107,20 @@
 
         .empty-state { text-align: center; padding: 60px 20px; color: rgba(255,255,255,0.4); }
         .empty-state .icon { font-size: 48px; margin-bottom: 16px; }
+
+        /* Search bar */
+        .search-bar {
+            display: flex; gap: 12px; align-items: center; margin-bottom: 16px;
+        }
+        .search-input {
+            flex: 1; padding: 10px 16px; background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15); border-radius: 8px;
+            color: #fff; font-size: 14px; outline: none; transition: border-color 0.3s;
+        }
+        .search-input:focus { border-color: #6c63ff; box-shadow: 0 0 0 3px rgba(108,99,255,0.15); }
+        .search-input::placeholder { color: rgba(255,255,255,0.3); }
+        .search-count { font-size: 12px; color: rgba(255,255,255,0.4); padding: 6px 14px; background: rgba(255,255,255,0.05); border-radius: 6px; }
+        .row-hidden { display: none; }
     </style>
 </head>
 <body>
@@ -160,7 +174,13 @@
         <% } %>
 
         <% if (applications != null && !applications.isEmpty()) { %>
-            <table class="data-table">
+            <!-- Search bar -->
+            <div class="search-bar">
+                <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search by student name, email, company, or status..." onkeyup="filterTable()">
+                <span class="search-count" id="searchCount"><%= applications.size() %> results</span>
+            </div>
+
+            <table class="data-table" id="applicationsTable">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -231,5 +251,27 @@
             </div>
         <% } %>
     </div>
+
+    <script>
+        function filterTable() {
+            var input = document.getElementById('searchInput').value.toLowerCase();
+            var table = document.getElementById('applicationsTable');
+            if (!table) return;
+            var rows = table.querySelectorAll('tbody tr');
+            var visibleCount = 0;
+
+            rows.forEach(function(row) {
+                var text = row.textContent.toLowerCase();
+                if (text.indexOf(input) > -1) {
+                    row.classList.remove('row-hidden');
+                    visibleCount++;
+                } else {
+                    row.classList.add('row-hidden');
+                }
+            });
+
+            document.getElementById('searchCount').textContent = visibleCount + ' result' + (visibleCount !== 1 ? 's' : '');
+        }
+    </script>
 </body>
 </html>

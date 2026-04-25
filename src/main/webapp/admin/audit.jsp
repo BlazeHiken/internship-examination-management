@@ -67,6 +67,30 @@
         .action-EXAM_ANSWER_SAVED { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.4); }
 
         .empty-msg { text-align: center; padding: 30px; color: rgba(255,255,255,0.3); font-size: 14px; }
+
+        /* Search bar */
+        .search-bar { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; }
+        .search-input {
+            flex: 1; padding: 10px 16px; background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15); border-radius: 8px;
+            color: #fff; font-size: 14px; outline: none; transition: border-color 0.3s;
+        }
+        .search-input:focus { border-color: #6c63ff; box-shadow: 0 0 0 3px rgba(108,99,255,0.15); }
+        .search-input::placeholder { color: rgba(255,255,255,0.3); }
+        .search-count { font-size: 12px; color: rgba(255,255,255,0.4); padding: 6px 14px; background: rgba(255,255,255,0.05); border-radius: 6px; white-space: nowrap; }
+        .row-hidden { display: none; }
+
+        /* Pagination */
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 16px; }
+        .page-btn {
+            padding: 6px 14px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px;
+            background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.6); font-size: 13px;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .page-btn:hover { border-color: #6c63ff; color: #fff; }
+        .page-btn.active { background: rgba(108,99,255,0.3); border-color: #6c63ff; color: #fff; font-weight: 600; }
+        .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .page-info { font-size: 12px; color: rgba(255,255,255,0.4); }
     </style>
 </head>
 <body>
@@ -120,7 +144,13 @@
                 <span class="badge-count">Last 50 entries</span>
             </div>
             <% if (auditLogs != null && !auditLogs.isEmpty()) { %>
-                <table class="data-table">
+                <!-- Search bar -->
+                <div class="search-bar">
+                    <input type="text" class="search-input" id="auditSearch" placeholder="🔍 Search by user, action, or IP..." onkeyup="filterAndPaginate()">
+                    <span class="search-count" id="auditCount"><%= auditLogs.size() %> entries</span>
+                </div>
+
+                <table class="data-table" id="auditTable">
                     <thead><tr><th>ID</th><th>User</th><th>Role</th><th>Action</th><th>IP Address</th><th>Time</th></tr></thead>
                     <tbody>
                         <% for (Map<String, Object> log : auditLogs) {
@@ -137,10 +167,100 @@
                         <% } %>
                     </tbody>
                 </table>
+
+                <!-- Pagination controls -->
+                <div class="pagination" id="auditPagination"></div>
             <% } else { %>
                 <div class="empty-msg">No audit logs recorded yet.</div>
             <% } %>
         </div>
     </div>
+
+    <script>
+        var ROWS_PER_PAGE = 10;
+        var currentPage = 1;
+
+        function getVisibleRows() {
+            var table = document.getElementById('auditTable');
+            if (!table) return [];
+            var rows = table.querySelectorAll('tbody tr');
+            var searchVal = document.getElementById('auditSearch').value.toLowerCase();
+            var visible = [];
+            rows.forEach(function(row) {
+                var text = row.textContent.toLowerCase();
+                if (text.indexOf(searchVal) > -1) {
+                    visible.push(row);
+                }
+            });
+            return visible;
+        }
+
+        function filterAndPaginate() {
+            currentPage = 1;
+            paginate();
+        }
+
+        function paginate() {
+            var table = document.getElementById('auditTable');
+            if (!table) return;
+            var allRows = table.querySelectorAll('tbody tr');
+            var visibleRows = getVisibleRows();
+            var totalPages = Math.ceil(visibleRows.length / ROWS_PER_PAGE);
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
+
+            // Hide all rows first
+            allRows.forEach(function(row) { row.style.display = 'none'; });
+
+            // Show only current page rows
+            var start = (currentPage - 1) * ROWS_PER_PAGE;
+            var end = start + ROWS_PER_PAGE;
+            for (var i = start; i < end && i < visibleRows.length; i++) {
+                visibleRows[i].style.display = '';
+            }
+
+            // Update count
+            document.getElementById('auditCount').textContent = visibleRows.length + ' entries';
+
+            // Build pagination buttons
+            var pag = document.getElementById('auditPagination');
+            pag.innerHTML = '';
+            if (totalPages <= 1) return;
+
+            // Prev
+            var prevBtn = document.createElement('button');
+            prevBtn.className = 'page-btn';
+            prevBtn.textContent = '← Prev';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.onclick = function() { currentPage--; paginate(); };
+            pag.appendChild(prevBtn);
+
+            // Page numbers
+            for (var p = 1; p <= totalPages; p++) {
+                var btn = document.createElement('button');
+                btn.className = 'page-btn' + (p === currentPage ? ' active' : '');
+                btn.textContent = p;
+                btn.onclick = (function(page) { return function() { currentPage = page; paginate(); }; })(p);
+                pag.appendChild(btn);
+            }
+
+            // Next
+            var nextBtn = document.createElement('button');
+            nextBtn.className = 'page-btn';
+            nextBtn.textContent = 'Next →';
+            nextBtn.disabled = currentPage === totalPages;
+            nextBtn.onclick = function() { currentPage++; paginate(); };
+            pag.appendChild(nextBtn);
+
+            // Page info
+            var info = document.createElement('span');
+            info.className = 'page-info';
+            info.textContent = 'Page ' + currentPage + ' of ' + totalPages;
+            pag.appendChild(info);
+        }
+
+        // Initialize pagination on load
+        paginate();
+    </script>
 </body>
 </html>
